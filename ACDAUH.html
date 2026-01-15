@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aesthetic Center DAUH</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f9f9f9; }
+  header { background: #ffcccc; padding: 20px; text-align: center; }
+  header h1 { margin: 0; font-size: 24px; }
+
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px;
+    padding: 15px;
+  }
+
+  .product-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .product-card img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+
+  .product-card h2 { margin: 5px 0 0; font-size: 16px; }
+  .product-card p.desc { margin: 5px 0; font-size: 14px; color: #555; }
+  .product-card p.price { margin: 5px 0; font-weight: bold; color: #e91e63; }
+
+  .whatsapp-btn {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: #25D366;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  @media (max-width: 500px) {
+    .grid-container { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Aesthetic Center DAUH</h1>
+</header>
+
+<div class="grid-container" id="products">
+  <!-- المنتجات ستظهر هنا -->
+</div>
+
+<script>
+const products = [];
+for(let i=1; i<=50; i++){
+  products.push({
+    name_ar: "منتج " + i,
+    name_en: "Product " + i,
+    description: "وصف قصير للمنتج " + i + " / Short description for product " + i,
+    price: (10 + i) + " \$",
+    img: "https://via.placeholder.com/120"
+  });
+}
+
+const container = document.getElementById('products');
+products.forEach(p => {
+  const card = document.createElement('div');
+  card.className = 'product-card';
+  card.innerHTML = `
+    <img src="${p.img}" alt="${p.name_en}">
+    <h2>${p.name_ar}</h2>
+    <p>${p.name_en}</p>
+    <p class="desc">${p.description}</p>
+    <p class="price">${p.price}</p>
+    <a class="whatsapp-btn" href="https://wa.me/96170900088" target="_blank">تواصل عبر واتساب</a>
+  `;
+  container.appendChild(card);
+});
+</script>
+
+</body>
+</html>
