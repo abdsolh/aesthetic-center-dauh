@@ -7,85 +7,104 @@
 
 <style>
 body {
-  font-family: Arial, sans-serif;
   margin: 0;
-  background: #f7f7f7;
+  font-family: Arial, sans-serif;
+  background: #fafafa;
 }
 
 header {
-  background: #f5c6d6;
+  background: linear-gradient(135deg, #f3d6df, #fbe9ee);
   padding: 20px;
   text-align: center;
 }
 
-header h1 {
-  margin: 0;
-}
-
-.filters {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  padding: 10px;
-  flex-wrap: wrap;
-}
-
-.filters button {
-  padding: 8px 15px;
+.lang-switch button {
+  margin: 5px;
+  padding: 6px 14px;
   border: none;
   border-radius: 20px;
   cursor: pointer;
   background: #fff;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  font-weight: bold;
+}
+
+.filters {
+  text-align: center;
+  margin: 10px;
+}
+
+.filters button {
+  margin: 5px;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  background: gold;   /* 🔥 لون ذهبي */
+  color: #000;
+  font-weight: bold;  /* 🔥 خط Bold */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 15px;
-  padding: 15px;
+  padding: 20px;
 }
 
 .product {
   background: #fff;
-  border-radius: 12px;
-  padding: 10px;
+  border-radius: 18px;
+  padding: 12px;
   text-align: center;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
+  display: flex;
+  flex-direction: column;
 }
 
 .product img {
-  width: 120px;
-  height: 120px;
+  width: 140px;
+  height: 140px;
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
 .product h3 {
-  margin: 5px 0 0;
-  font-size: 16px;
+  margin: 8px 0 4px;
 }
 
 .product p {
-  margin: 4px 0;
   font-size: 14px;
   color: #555;
+  margin: 4px 0;
 }
 
 .price {
-  font-weight: bold;
   color: #e91e63;
+  font-weight: bold;
 }
 
 .whatsapp {
-  display: block;
-  margin-top: 8px;
-  padding: 8px;
+  margin-top: auto;
+  padding: 10px;
   background: #25D366;
   color: #fff;
   text-decoration: none;
-  border-radius: 6px;
-  font-size: 14px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+/* 🔹 Footer */
+footer {
+  text-align: center;
+  font-size: 12px;
+  color: #555;
+  padding: 12px 0;
+  background: #f1f1f1;
+  margin-top: 20px;
 }
 </style>
 </head>
@@ -94,63 +113,75 @@ header h1 {
 
 <header>
   <h1>Aesthetic Center DAUH</h1>
-  <p>منتجات العناية بالبشرة | Skincare Products</p>
+
+  <div class="lang-switch">
+    <button onclick="setLang('ar')">AR</button>
+    <button onclick="setLang('en')">EN</button>
+  </div>
 </header>
 
 <div class="filters">
-  <button onclick="filterProducts('all')">الكل</button>
+  <button onclick="filterProducts('all')">الكل | All</button>
   <button onclick="filterProducts('cream')">كريمات</button>
   <button onclick="filterProducts('serum')">سيروم</button>
   <button onclick="filterProducts('cleanser')">تنظيف</button>
+  <button onclick="filterProducts('mask')">ماسكات</button>
 </div>
 
 <div class="grid" id="products"></div>
 
 <script>
 const whatsappNumber = "96170900088";
+let currentLang = localStorage.getItem("lang") || "ar";
+let currentCategory = "all";
 
-const products = [
+/* 🔹 منتجات مع فئات */
+const baseProducts = [
+  {cat:"cream", ar:"كريم ترطيب", en:"Moisturizing Cream", dar:"ترطيب عميق للبشرة", den:"Deep hydration", price:"25$", img:"images/p1.jpg"},
+  {cat:"cream", ar:"كريم تفتيح", en:"Brightening Cream", dar:"تفتيح البشرة", den:"Skin brightening", price:"28$", img:"images/p2.jpg"},
+  {cat:"cream", ar:"كريم ليلي", en:"Night Cream", dar:"تجديد ليلي", den:"Night repair", price:"30$", img:"images/p3.jpg"},
 
-  // ===== كريمات (Creams) =====
-  {cat:"cream", name_ar:"كريم ترطيب", name_en:"Moisturizing Cream", desc:"ترطيب عميق للبشرة", price:"25$", img:"https://via.placeholder.com/120"},
-  {cat:"cream", name_ar:"كريم تفتيح", name_en:"Brightening Cream", desc:"يساعد على توحيد اللون", price:"28$", img:"https://via.placeholder.com/120"},
-  {cat:"cream", name_ar:"كريم ليلي", name_en:"Night Cream", desc:"تجديد البشرة أثناء النوم", price:"30$", img:"https://via.placeholder.com/120"},
-  {cat:"cream", name_ar:"كريم شد", name_en:"Firming Cream", desc:"يحسن مرونة الجلد", price:"32$", img:"https://via.placeholder.com/120"},
-  {cat:"cream", name_ar:"كريم عين", name_en:"Eye Cream", desc:"يقلل الهالات", price:"22$", img:"https://via.placeholder.com/120"},
+  {cat:"serum", ar:"سيروم فيتامين C", en:"Vitamin C Serum", dar:"إشراقة ونضارة", den:"Glow boost", price:"35$", img:"images/p4.jpg"},
+  {cat:"serum", ar:"سيروم هيالورونيك", en:"Hyaluronic Serum", dar:"ترطيب مكثف", den:"Intense hydration", price:"33$", img:"images/p5.jpg"},
+  {cat:"serum", ar:"سيروم ريتينول", en:"Retinol Serum", dar:"مكافحة التجاعيد", den:"Anti-aging", price:"38$", img:"images/p6.jpg"},
 
-  // ===== سيروم (Serums) =====
-  {cat:"serum", name_ar:"سيروم فيتامين C", name_en:"Vitamin C Serum", desc:"إشراقة ونضارة", price:"35$", img:"https://via.placeholder.com/120"},
-  {cat:"serum", name_ar:"سيروم هيالورونيك", name_en:"Hyaluronic Serum", desc:"ترطيب مكثف", price:"33$", img:"https://via.placeholder.com/120"},
-  {cat:"serum", name_ar:"سيروم ريتينول", name_en:"Retinol Serum", desc:"مكافحة التجاعيد", price:"38$", img:"https://via.placeholder.com/120"},
-  {cat:"serum", name_ar:"سيروم كولاجين", name_en:"Collagen Serum", desc:"يعزز مرونة البشرة", price:"36$", img:"https://via.placeholder.com/120"},
-  {cat:"serum", name_ar:"سيروم تهدئة", name_en:"Calming Serum", desc:"للبشرة الحساسة", price:"29$", img:"https://via.placeholder.com/120"},
+  {cat:"cleanser", ar:"غسول وجه", en:"Facial Cleanser", dar:"تنظيف لطيف", den:"Gentle cleansing", price:"18$", img:"images/p7.jpg"},
+  {cat:"cleanser", ar:"تونر", en:"Face Toner", dar:"تنقية المسام", den:"Pore refining", price:"19$", img:"images/p8.jpg"},
+  {cat:"cleanser", ar:"ماء ميسيلار", en:"Micellar Water", dar:"إزالة المكياج", den:"Makeup removal", price:"20$", img:"images/p9.jpg"},
 
-  // ===== تنظيف (Cleansers) =====
-  {cat:"cleanser", name_ar:"غسول وجه", name_en:"Facial Cleanser", desc:"تنظيف يومي لطيف", price:"18$", img:"https://via.placeholder.com/120"},
-  {cat:"cleanser", name_ar:"ماء ميسيلار", name_en:"Micellar Water", desc:"إزالة المكياج", price:"20$", img:"https://via.placeholder.com/120"},
-  {cat:"cleanser", name_ar:"مقشر", name_en:"Face Scrub", desc:"إزالة الخلايا الميتة", price:"22$", img:"https://via.placeholder.com/120"},
-  {cat:"cleanser", name_ar:"تونر", name_en:"Face Toner", desc:"تنقية المسام", price:"19$", img:"https://via.placeholder.com/120"},
-  {cat:"cleanser", name_ar:"ماسك طين", name_en:"Clay Mask", desc:"تنظيف عميق", price:"26$", img:"https://via.placeholder.com/120"},
+  {cat:"mask", ar:"ماسك طين", en:"Clay Mask", dar:"تنظيف عميق", den:"Deep cleansing", price:"26$", img:"images/p10.jpg"}
 ];
 
-// تكرار لحد 50 منتج
+/* 🔹 نكرر لنوصل 50 منتج */
+const products = [];
 while (products.length < 50) {
-  products.push({...products[products.length % 15]});
+  baseProducts.forEach(p => {
+    if (products.length < 50) products.push(p);
+  });
 }
 
-const container = document.getElementById("products");
-
-function renderProducts(list) {
+function render() {
+  const container = document.getElementById("products");
   container.innerHTML = "";
-  list.forEach(p => {
-    const msg = `مرحبا، أود الاستفسار عن المنتج: ${p.name_ar}`;
+
+  const filtered = currentCategory === "all"
+    ? products
+    : products.filter(p => p.cat === currentCategory);
+
+  filtered.forEach(p => {
+    const name = currentLang === "ar" ? p.ar : p.en;
+    const desc = currentLang === "ar" ? p.dar : p.den;
+    const msg  = currentLang === "ar"
+      ? `مرحبا، أود الاستفسار عن المنتج: ${p.ar}`
+      : `Hello, I would like to ask about the product: ${p.en}`;
+
     container.innerHTML += `
       <div class="product">
-        <img src="${p.img}">
-        <h3>${p.name_ar}</h3>
-        <p>${p.name_en}</p>
-        <p>${p.desc}</p>
+        <img src="${p.img}" onerror="this.src='https://via.placeholder.com/140'">
+        <h3>${name}</h3>
+        <p>${desc}</p>
         <p class="price">${p.price}</p>
+
         <a class="whatsapp"
            href="https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}"
            target="_blank">
@@ -161,13 +192,25 @@ function renderProducts(list) {
   });
 }
 
-function filterProducts(cat) {
-  if (cat === "all") renderProducts(products);
-  else renderProducts(products.filter(p => p.cat === cat));
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem("lang", lang);
+  document.body.style.direction = lang === "ar" ? "rtl" : "ltr";
+  render();
 }
 
-renderProducts(products);
+function filterProducts(cat) {
+  currentCategory = cat;
+  render();
+}
+
+setLang(currentLang);
 </script>
+
+<!-- 🔹 Footer -->
+<footer>
+Address Lebanon Baalbeck, Dar Alamal University Hospital, Engineer Abdullah Solh © 2026
+</footer>
 
 </body>
 </html>
