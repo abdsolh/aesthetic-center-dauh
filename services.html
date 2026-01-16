@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Services | الخدمات</title>
+<style>
+body {
+  margin:0;
+  font-family: Arial, sans-serif;
+  background: #fafafa;
+}
+
+/* Header */
+header {
+  background: linear-gradient(135deg, #f3d6df, #fbe9ee);
+  padding: 20px;
+  text-align: center;
+}
+
+.lang-switch button {
+  margin: 5px;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  font-weight: bold;
+}
+
+.back-button {
+  margin-top:10px;
+  padding:6px 14px;
+  border:none;
+  border-radius:12px;
+  background:#e91e63;
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
+  box-shadow:0 2px 6px rgba(0,0,0,0.2);
+}
+
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+  padding: 20px;
+}
+
+.service {
+  background: #fff;
+  border-radius: 18px;
+  padding: 12px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.service img {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.service h3 {
+  margin: 8px 0 4px;
+}
+
+.service p {
+  font-size: 14px;
+  color: #555;
+  margin: 4px 0;
+}
+
+.price {
+  color: #e91e63;
+  font-weight: bold;
+}
+
+.whatsapp {
+  margin-top: auto;
+  padding: 10px;
+  background: #25D366;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  font-size: 12px;
+  color: #555;
+  padding: 12px 0;
+  background: #f1f1f1;
+  margin-top: 20px;
+}
+
+footer a {
+  color: #e91e63;
+  text-decoration: none;
+  margin-left: 5px;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Aesthetic Center DAUH | الخدمات</h1>
+  <div class="lang-switch">
+    <button onclick="setLang('ar')">AR</button>
+    <button onclick="setLang('en')">EN</button>
+  </div>
+  <button class="back-button" onclick="location.href='products.html'">
+    الرجوع إلى المنتجات | Back to Products
+  </button>
+</header>
+
+<div class="grid" id="services"></div>
+
+<script>
+const whatsappNumber = "96170900088";
+let currentLang = localStorage.getItem("lang") || "ar";
+
+/* Services */
+const services = [
+  {ar:"جلسة ليزر", en:"Laser Session", dar:"إزالة الشعر بالليزر", den:"Laser hair removal", price:"50$", img:"images/service1.jpg"},
+  {ar:"جلسة عناية بالبشرة", en:"Skin Care Session", dar:"تنظيف البشرة وتغذيتها", den:"Face cleansing & nourishment", price:"45$", img:"images/service2.jpg"},
+  {ar:"جلسة سبا", en:"Spa Session", dar:"استرخاء وتجديد", den:"Relaxation & renewal", price:"60$", img:"images/service3.jpg"},
+  {ar:"بوتوكس", en:"Botox", dar:"تجميل وتنعيم", den:"Beauty & smoothing", price:"120$", img:"images/service4.jpg"},
+  {ar:"فيلر", en:"Filler", dar:"ملء خطوط وتجاعيد", den:"Lines & wrinkles filling", price:"110$", img:"images/service5.jpg"}
+];
+
+/* Render Services */
+function render() {
+  const container = document.getElementById("services");
+  container.innerHTML = "";
+
+  services.forEach(s=>{
+    const name = currentLang==="ar"?s.ar:s.en;
+    const desc = currentLang==="ar"?s.dar:s.den;
+    const msg = currentLang==="ar"
+      ? `مرحبا، أود الاستفسار عن الخدمة: ${s.ar}`
+      : `Hello, I would like to ask about the service: ${s.en}`;
+
+    container.innerHTML += `
+      <div class="service">
+        <img src="${s.img}" onerror="this.src='https://via.placeholder.com/140'">
+        <h3>${name}</h3>
+        <p>${desc}</p>
+        <p class="price">${s.price}</p>
+        <a class="whatsapp" href="https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}" target="_blank">
+          ${currentLang==="ar"?"تواصل عبر واتساب":"Contact via WhatsApp"}
+        </a>
+      </div>
+    `;
+  });
+}
+
+/* Language */
+function setLang(lang){
+  currentLang = lang;
+  localStorage.setItem("lang", lang);
+  document.body.style.direction = lang==="ar"?"rtl":"ltr";
+  render();
+}
+
+/* Init */
+setLang(currentLang);
+</script>
+
+<footer>
+  Address Lebanon Baalbeck, Dar Alamal University Hospital<br>
+  Engineer Abdullah Solh © 2026<br>
+  <a href="https://www.instagram.com/yourusername" target="_blank">📸 Instagram</a>
+</footer>
+
+</body>
+</html>
