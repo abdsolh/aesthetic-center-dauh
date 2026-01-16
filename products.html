@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Products | المنتجات</title>
+<style>
+body {
+  margin:0;
+  font-family: Arial, sans-serif;
+  background: #fafafa;
+}
+
+/* Header */
+header {
+  background: linear-gradient(135deg, #f3d6df, #fbe9ee);
+  padding: 20px;
+  text-align: center;
+}
+
+.lang-switch button {
+  margin: 5px;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  font-weight: bold;
+}
+
+.back-button {
+  margin-top:10px;
+  padding:6px 14px;
+  border:none;
+  border-radius:12px;
+  background:#e91e63;
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
+  box-shadow:0 2px 6px rgba(0,0,0,0.2);
+}
+
+/* Filters */
+.filters {
+  text-align: center;
+  margin: 10px;
+}
+.filters button {
+  margin: 5px;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  background: gold;
+  color: #000;
+  font-weight: bold;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+  padding: 20px;
+}
+
+.product {
+  background: #fff;
+  border-radius: 18px;
+  padding: 12px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.product img {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.product h3 {
+  margin: 8px 0 4px;
+}
+
+.product p {
+  font-size: 14px;
+  color: #555;
+  margin: 4px 0;
+}
+
+.price {
+  color: #e91e63;
+  font-weight: bold;
+}
+
+.whatsapp {
+  margin-top: auto;
+  padding: 10px;
+  background: #25D366;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  font-size: 12px;
+  color: #555;
+  padding: 12px 0;
+  background: #f1f1f1;
+  margin-top: 20px;
+}
+
+footer a {
+  color: #e91e63;
+  text-decoration: none;
+  margin-left: 5px;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Aesthetic Center DAUH | المنتجات</h1>
+  <div class="lang-switch">
+    <button onclick="setLang('ar')">AR</button>
+    <button onclick="setLang('en')">EN</button>
+  </div>
+  <button class="back-button" onclick="location.href='services.html'">
+    الرجوع إلى الخدمات | Back to Services
+  </button>
+</header>
+
+<div class="filters" id="filters"></div>
+<div class="grid" id="products"></div>
+
+<script>
+const whatsappNumber = "96170900088";
+let currentLang = localStorage.getItem("lang") || "ar";
+let currentCategory = "all";
+
+/* Categories */
+const productCategories = [
+  {cat:"cream", ar:"كريمات", en:"Creams"},
+  {cat:"serum", ar:"سيروم", en:"Serums"},
+  {cat:"cleanser", ar:"تنظيف", en:"Cleanser"},
+  {cat:"mask", ar:"ماسكات", en:"Masks"},
+  {cat:"sunscreen", ar:"حماية من الشمس", en:"Sunscreen"}
+];
+
+/* Products */
+const products = [
+  {cat:"cream", ar:"كريم ترطيب", en:"Moisturizing Cream", dar:"ترطيب عميق للبشرة", den:"Deep hydration", price:"25$", img:"images/p1.jpg"},
+  {cat:"cream", ar:"كريم تفتيح", en:"Brightening Cream", dar:"تفتيح البشرة", den:"Skin brightening", price:"28$", img:"images/p2.jpg"},
+  {cat:"serum", ar:"سيروم فيتامين C", en:"Vitamin C Serum", dar:"إشراقة ونضارة", den:"Glow boost", price:"35$", img:"images/p4.jpg"},
+  {cat:"cleanser", ar:"غسول وجه", en:"Facial Cleanser", dar:"تنظيف لطيف", den:"Gentle cleansing", price:"18$", img:"images/p7.jpg"},
+  {cat:"mask", ar:"ماسك طين", en:"Clay Mask", dar:"تنظيف عميق", den:"Deep cleansing", price:"26$", img:"images/p10.jpg"},
+  {cat:"sunscreen", ar:"واقي شمس SPF50", en:"Sunscreen SPF50", dar:"حماية كاملة من الشمس", den:"Full sun protection", price:"22$", img:"images/p11.jpg"}
+];
+
+/* Render Products */
+function render() {
+  const container = document.getElementById("products");
+  container.innerHTML = "";
+  const filtered = currentCategory==="all" ? products : products.filter(p=>p.cat===currentCategory);
+
+  filtered.forEach(p=>{
+    const name = currentLang==="ar"?p.ar:p.en;
+    const desc = currentLang==="ar"?p.dar:p.den;
+    const msg = currentLang==="ar" 
+      ? `مرحبا، أود الاستفسار عن المنتج: ${p.ar}`
+      : `Hello, I would like to ask about the product: ${p.en}`;
+
+    container.innerHTML += `
+      <div class="product">
+        <img src="${p.img}" onerror="this.src='https://via.placeholder.com/140'">
+        <h3>${name}</h3>
+        <p>${desc}</p>
+        <p class="price">${p.price}</p>
+        <a class="whatsapp" href="https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}" target="_blank">
+          ${currentLang==="ar"?"تواصل عبر واتساب":"Contact via WhatsApp"}
+        </a>
+      </div>
+    `;
+  });
+}
+
+/* Language */
+function setLang(lang){
+  currentLang = lang;
+  localStorage.setItem("lang", lang);
+  document.body.style.direction = lang==="ar"?"rtl":"ltr";
+  render();
+  renderFilters();
+}
+
+/* Render Filters */
+function renderFilters(){
+  const container = document.getElementById("filters");
+  container.innerHTML = "";
+  productCategories.forEach(cat=>{
+    const btn = document.createElement("button");
+    btn.innerText = currentLang==="ar"?cat.ar:cat.en;
+    btn.onclick = ()=>{ currentCategory=cat.cat; render(); };
+    container.appendChild(btn);
+  });
+}
+
+/* Init */
+renderFilters();
+setLang(currentLang);
+</script>
+
+<footer>
+  Address Lebanon Baalbeck, Dar Alamal University Hospital<br>
+  Engineer Abdullah Solh © 2026<br>
+  <a href="https://www.instagram.com/yourusername" target="_blank">📸 Instagram</a>
+</footer>
+
+</body>
+</html>
