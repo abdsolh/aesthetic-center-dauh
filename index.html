@@ -4,94 +4,169 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aesthetic Center DAUH</title>
+
 <style>
-  body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f9f9f9; }
-  header { background: #ffcccc; padding: 20px; text-align: center; }
-  header h1 { margin: 0; font-size: 24px; }
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f7f7f7;
+}
 
-  .grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 15px;
-    padding: 15px;
-  }
+header {
+  background: #f5c6d6;
+  padding: 20px;
+  text-align: center;
+}
 
-  .product-card {
-    background: #fff;
-    border-radius: 10px;
-    padding: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
+header h1 {
+  margin: 0;
+}
 
-  .product-card img {
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-bottom: 10px;
-  }
+.filters {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  flex-wrap: wrap;
+}
 
-  .product-card h2 { margin: 5px 0 0; font-size: 16px; }
-  .product-card p.desc { margin: 5px 0; font-size: 14px; color: #555; }
-  .product-card p.price { margin: 5px 0; font-weight: bold; color: #e91e63; }
+.filters button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
 
-  .whatsapp-btn {
-    margin-top: 8px;
-    padding: 8px 12px;
-    background: #25D366;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    text-decoration: none;
-    font-size: 14px;
-    cursor: pointer;
-  }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 15px;
+  padding: 15px;
+}
 
-  @media (max-width: 500px) {
-    .grid-container { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
-  }
+.product {
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.product img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.product h3 {
+  margin: 5px 0 0;
+  font-size: 16px;
+}
+
+.product p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.price {
+  font-weight: bold;
+  color: #e91e63;
+}
+
+.whatsapp {
+  display: block;
+  margin-top: 8px;
+  padding: 8px;
+  background: #25D366;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 14px;
+}
 </style>
 </head>
+
 <body>
 
 <header>
   <h1>Aesthetic Center DAUH</h1>
+  <p>منتجات العناية بالبشرة | Skincare Products</p>
 </header>
 
-<div class="grid-container" id="products">
-  <!-- المنتجات ستظهر هنا -->
+<div class="filters">
+  <button onclick="filterProducts('all')">الكل</button>
+  <button onclick="filterProducts('cream')">كريمات</button>
+  <button onclick="filterProducts('serum')">سيروم</button>
+  <button onclick="filterProducts('cleanser')">تنظيف</button>
 </div>
 
+<div class="grid" id="products"></div>
+
 <script>
-const products = [];
-for(let i=1; i<=50; i++){
-  products.push({
-    name_ar: "منتج " + i,
-    name_en: "Product " + i,
-    description: "وصف قصير للمنتج " + i + " / Short description for product " + i,
-    price: (10 + i) + " \$",
-    img: "https://via.placeholder.com/120"
+const whatsappNumber = "96170900088";
+
+const products = [
+
+  // ===== كريمات (Creams) =====
+  {cat:"cream", name_ar:"كريم ترطيب", name_en:"Moisturizing Cream", desc:"ترطيب عميق للبشرة", price:"25$", img:"https://via.placeholder.com/120"},
+  {cat:"cream", name_ar:"كريم تفتيح", name_en:"Brightening Cream", desc:"يساعد على توحيد اللون", price:"28$", img:"https://via.placeholder.com/120"},
+  {cat:"cream", name_ar:"كريم ليلي", name_en:"Night Cream", desc:"تجديد البشرة أثناء النوم", price:"30$", img:"https://via.placeholder.com/120"},
+  {cat:"cream", name_ar:"كريم شد", name_en:"Firming Cream", desc:"يحسن مرونة الجلد", price:"32$", img:"https://via.placeholder.com/120"},
+  {cat:"cream", name_ar:"كريم عين", name_en:"Eye Cream", desc:"يقلل الهالات", price:"22$", img:"https://via.placeholder.com/120"},
+
+  // ===== سيروم (Serums) =====
+  {cat:"serum", name_ar:"سيروم فيتامين C", name_en:"Vitamin C Serum", desc:"إشراقة ونضارة", price:"35$", img:"https://via.placeholder.com/120"},
+  {cat:"serum", name_ar:"سيروم هيالورونيك", name_en:"Hyaluronic Serum", desc:"ترطيب مكثف", price:"33$", img:"https://via.placeholder.com/120"},
+  {cat:"serum", name_ar:"سيروم ريتينول", name_en:"Retinol Serum", desc:"مكافحة التجاعيد", price:"38$", img:"https://via.placeholder.com/120"},
+  {cat:"serum", name_ar:"سيروم كولاجين", name_en:"Collagen Serum", desc:"يعزز مرونة البشرة", price:"36$", img:"https://via.placeholder.com/120"},
+  {cat:"serum", name_ar:"سيروم تهدئة", name_en:"Calming Serum", desc:"للبشرة الحساسة", price:"29$", img:"https://via.placeholder.com/120"},
+
+  // ===== تنظيف (Cleansers) =====
+  {cat:"cleanser", name_ar:"غسول وجه", name_en:"Facial Cleanser", desc:"تنظيف يومي لطيف", price:"18$", img:"https://via.placeholder.com/120"},
+  {cat:"cleanser", name_ar:"ماء ميسيلار", name_en:"Micellar Water", desc:"إزالة المكياج", price:"20$", img:"https://via.placeholder.com/120"},
+  {cat:"cleanser", name_ar:"مقشر", name_en:"Face Scrub", desc:"إزالة الخلايا الميتة", price:"22$", img:"https://via.placeholder.com/120"},
+  {cat:"cleanser", name_ar:"تونر", name_en:"Face Toner", desc:"تنقية المسام", price:"19$", img:"https://via.placeholder.com/120"},
+  {cat:"cleanser", name_ar:"ماسك طين", name_en:"Clay Mask", desc:"تنظيف عميق", price:"26$", img:"https://via.placeholder.com/120"},
+];
+
+// تكرار لحد 50 منتج
+while (products.length < 50) {
+  products.push({...products[products.length % 15]});
+}
+
+const container = document.getElementById("products");
+
+function renderProducts(list) {
+  container.innerHTML = "";
+  list.forEach(p => {
+    const msg = `مرحبا، أود الاستفسار عن المنتج: ${p.name_ar}`;
+    container.innerHTML += `
+      <div class="product">
+        <img src="${p.img}">
+        <h3>${p.name_ar}</h3>
+        <p>${p.name_en}</p>
+        <p>${p.desc}</p>
+        <p class="price">${p.price}</p>
+        <a class="whatsapp"
+           href="https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}"
+           target="_blank">
+           تواصل عبر واتساب
+        </a>
+      </div>
+    `;
   });
 }
 
-const container = document.getElementById('products');
-products.forEach(p => {
-  const card = document.createElement('div');
-  card.className = 'product-card';
-  card.innerHTML = `
-    <img src="${p.img}" alt="${p.name_en}">
-    <h2>${p.name_ar}</h2>
-    <p>${p.name_en}</p>
-    <p class="desc">${p.description}</p>
-    <p class="price">${p.price}</p>
-    <a class="whatsapp-btn" href="https://wa.me/96170900088" target="_blank">تواصل عبر واتساب</a>
-  `;
-  container.appendChild(card);
-});
+function filterProducts(cat) {
+  if (cat === "all") renderProducts(products);
+  else renderProducts(products.filter(p => p.cat === cat));
+}
+
+renderProducts(products);
 </script>
 
 </body>
