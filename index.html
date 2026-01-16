@@ -4,12 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aesthetic Center DAUH</title>
-
 <style>
 body {
-  margin: 0;
+  margin:0;
   font-family: Arial, sans-serif;
   background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 header {
@@ -29,191 +31,79 @@ header {
   font-weight: bold;
 }
 
-.filters {
-  text-align: center;
-  margin: 10px;
-}
-
-.filters button {
-  margin: 5px;
-  padding: 6px 14px;
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  background: gold;   /* 🔥 لون ذهبي */
-  color: #000;
-  font-weight: bold;  /* 🔥 خط Bold */
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+.main-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 15px;
-  padding: 20px;
+  grid-template-columns: repeat(2, 200px);
+  gap: 40px;
 }
 
-.product {
-  background: #fff;
-  border-radius: 18px;
-  padding: 12px;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-
-  display: flex;
-  flex-direction: column;
-}
-
-.product img {
-  width: 140px;
-  height: 140px;
-  object-fit: cover;
-  border-radius: 12px;
-}
-
-.product h3 {
-  margin: 8px 0 4px;
-}
-
-.product p {
-  font-size: 14px;
-  color: #555;
-  margin: 4px 0;
-}
-
-.price {
-  color: #e91e63;
+.grid button {
+  padding: 40px;
+  font-size: 20px;
   font-weight: bold;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  background: gold;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transition: transform 0.2s;
 }
 
-.whatsapp {
-  margin-top: auto;
-  padding: 10px;
-  background: #25D366;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: bold;
+.grid button:hover {
+  transform: scale(1.05);
 }
 
-/* 🔹 Footer */
 footer {
   text-align: center;
   font-size: 12px;
   color: #555;
   padding: 12px 0;
   background: #f1f1f1;
-  margin-top: 20px;
 }
+footer a {
+  color:#e91e63;
+  text-decoration:none;
+  margin-left:5px;
+}
+footer a:hover { text-decoration:underline; }
 </style>
 </head>
-
 <body>
 
 <header>
   <h1>Aesthetic Center DAUH</h1>
-
   <div class="lang-switch">
     <button onclick="setLang('ar')">AR</button>
     <button onclick="setLang('en')">EN</button>
   </div>
 </header>
 
-<div class="filters">
-  <button onclick="filterProducts('all')">الكل | All</button>
-  <button onclick="filterProducts('cream')">كريمات</button>
-  <button onclick="filterProducts('serum')">سيروم</button>
-  <button onclick="filterProducts('cleanser')">تنظيف</button>
-  <button onclick="filterProducts('mask')">ماسكات</button>
+<div class="main-content">
+  <div class="grid">
+    <button onclick="location.href='products.html'">Products | المنتجات</button>
+    <button onclick="location.href='services.html'">Services | الخدمات</button>
+  </div>
 </div>
 
-<div class="grid" id="products"></div>
-
-<script>
-const whatsappNumber = "96170900088";
-let currentLang = localStorage.getItem("lang") || "ar";
-let currentCategory = "all";
-
-/* 🔹 منتجات مع فئات */
-const baseProducts = [
-  {cat:"cream", ar:"كريم ترطيب", en:"Moisturizing Cream", dar:"ترطيب عميق للبشرة", den:"Deep hydration", price:"25$", img:"images/p1.jpg"},
-  {cat:"cream", ar:"كريم تفتيح", en:"Brightening Cream", dar:"تفتيح البشرة", den:"Skin brightening", price:"28$", img:"images/p2.jpg"},
-  {cat:"cream", ar:"كريم ليلي", en:"Night Cream", dar:"تجديد ليلي", den:"Night repair", price:"30$", img:"images/p3.jpg"},
-
-  {cat:"serum", ar:"سيروم فيتامين C", en:"Vitamin C Serum", dar:"إشراقة ونضارة", den:"Glow boost", price:"35$", img:"images/p4.jpg"},
-  {cat:"serum", ar:"سيروم هيالورونيك", en:"Hyaluronic Serum", dar:"ترطيب مكثف", den:"Intense hydration", price:"33$", img:"images/p5.jpg"},
-  {cat:"serum", ar:"سيروم ريتينول", en:"Retinol Serum", dar:"مكافحة التجاعيد", den:"Anti-aging", price:"38$", img:"images/p6.jpg"},
-
-  {cat:"cleanser", ar:"غسول وجه", en:"Facial Cleanser", dar:"تنظيف لطيف", den:"Gentle cleansing", price:"18$", img:"images/p7.jpg"},
-  {cat:"cleanser", ar:"تونر", en:"Face Toner", dar:"تنقية المسام", den:"Pore refining", price:"19$", img:"images/p8.jpg"},
-  {cat:"cleanser", ar:"ماء ميسيلار", en:"Micellar Water", dar:"إزالة المكياج", den:"Makeup removal", price:"20$", img:"images/p9.jpg"},
-
-  {cat:"mask", ar:"ماسك طين", en:"Clay Mask", dar:"تنظيف عميق", den:"Deep cleansing", price:"26$", img:"images/p10.jpg"}
-];
-
-/* 🔹 نكرر لنوصل 50 منتج */
-const products = [];
-while (products.length < 50) {
-  baseProducts.forEach(p => {
-    if (products.length < 50) products.push(p);
-  });
-}
-
-function render() {
-  const container = document.getElementById("products");
-  container.innerHTML = "";
-
-  const filtered = currentCategory === "all"
-    ? products
-    : products.filter(p => p.cat === currentCategory);
-
-  filtered.forEach(p => {
-    const name = currentLang === "ar" ? p.ar : p.en;
-    const desc = currentLang === "ar" ? p.dar : p.den;
-    const msg  = currentLang === "ar"
-      ? `مرحبا، أود الاستفسار عن المنتج: ${p.ar}`
-      : `Hello, I would like to ask about the product: ${p.en}`;
-
-    container.innerHTML += `
-      <div class="product">
-        <img src="${p.img}" onerror="this.src='https://via.placeholder.com/140'">
-        <h3>${name}</h3>
-        <p>${desc}</p>
-        <p class="price">${p.price}</p>
-
-        <a class="whatsapp"
-           href="https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}"
-           target="_blank">
-           تواصل عبر واتساب
-        </a>
-      </div>
-    `;
-  });
-}
-
-function setLang(lang) {
-  currentLang = lang;
-  localStorage.setItem("lang", lang);
-  document.body.style.direction = lang === "ar" ? "rtl" : "ltr";
-  render();
-}
-
-function filterProducts(cat) {
-  currentCategory = cat;
-  render();
-}
-
-setLang(currentLang);
-</script>
-
-<!-- 🔹 Footer -->
 <footer>
   Address Lebanon Baalbeck, Dar Alamal University Hospital<br>
-  <a href="https://www.instagram.com/aestheticdaralamal" target="_blank">Instagram</a> <br>
-   Developed by Engineer Abdullah Solh © 2026<br>
+  Engineer Abdullah Solh © 2026<br>
+  <a href="https://www.instagram.com/aestheticdaralamal" target="_blank">📸 Instagram</a>
 </footer>
 
+<script>
+function setLang(lang){
+  if(lang==="ar") document.body.style.direction="rtl";
+  else document.body.style.direction="ltr";
+}
+</script>
 
 </body>
 </html>
