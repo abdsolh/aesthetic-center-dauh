@@ -12,6 +12,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  direction: ltr; /* ثابتة، ما تتغير */
 }
 
 header {
@@ -78,7 +79,7 @@ footer a:hover { text-decoration:underline; }
 <body>
 
 <header>
-  <h1>Aesthetic Center DAUH</h1>
+  <h1>Aesthetic Center DAUH</h1> <!-- ثابت بالإنجليزية -->
   <div class="lang-switch">
     <button onclick="setLang('ar')">AR</button>
     <button onclick="setLang('en')">EN</button>
@@ -87,21 +88,30 @@ footer a:hover { text-decoration:underline; }
 
 <div class="main-content">
   <div class="grid">
-    <button onclick="location.href='products.html'">Products | المنتجات</button>
-    <button onclick="location.href='services.html'">Services | الخدمات</button>
+    <button id="btn-products" onclick="location.href='products.html'">Products | المنتجات</button>
+    <button id="btn-services" onclick="location.href='services.html'">Services | الخدمات</button>
   </div>
 </div>
 
 <footer>
-  Address Lebanon Baalbeck, Dar Alamal University Hospital<br>
-  Engineer Abdullah Solh © 2026<br>
+  <span id="footer-address">Address Lebanon Baalbeck, Dar Alamal University Hospital</span><br>
+  <span id="footer-engineer">Engineer Abdullah Solh © 2026</span><br>
   <a href="https://www.instagram.com/aestheticdaralamal" target="_blank">📸 Instagram</a>
 </footer>
 
 <script>
 function setLang(lang){
-  if(lang==="ar") document.body.style.direction="rtl";
-  else document.body.style.direction="ltr";
+  if(lang === "ar"){
+    document.getElementById("btn-products").textContent = "المنتجات";
+    document.getElementById("btn-services").textContent = "الخدمات";
+    document.getElementById("footer-address").textContent = "لبنان، بعلبك، مستشفى دار الأمل الجامعي";
+    document.getElementById("footer-engineer").textContent = "المهندس عبدالله صلح © 2026";
+  } else {
+    document.getElementById("btn-products").textContent = "Products";
+    document.getElementById("btn-services").textContent = "Services";
+    document.getElementById("footer-address").textContent = "Address Lebanon Baalbeck, Dar Alamal University Hospital";
+    document.getElementById("footer-engineer").textContent = "Engineer Abdullah Solh © 2026";
+  }
 }
 </script>
 
