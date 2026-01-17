@@ -9,6 +9,7 @@ body {
   margin:0;
   font-family: Arial, sans-serif;
   background: #fafafa;
+  direction: ltr; /* ثابت */
 }
 
 /* Header */
@@ -133,13 +134,13 @@ footer a:hover {
 <body>
 
 <header>
-  <h1>Aesthetic Center DAUH | المنتجات</h1>
+  <h1>Aesthetic Center DAUH | <span id="page-title">المنتجات</span></h1>
   <div class="lang-switch">
     <button onclick="setLang('ar')">AR</button>
     <button onclick="setLang('en')">EN</button>
   </div>
-  <button class="back-button" onclick="location.href='services.html'">
-    الرجوع إلى الخدمات | Back to Services
+  <button class="back-button" onclick="location.href='services.html'" id="back-button">
+    الرجوع إلى الخدمات
   </button>
 </header>
 
@@ -155,9 +156,9 @@ let currentCategory = "all";
 const productCategories = [
   {cat:"cream", ar:"كريمات", en:"Creams"},
   {cat:"serum", ar:"سيروم", en:"Serums"},
-  {cat:"cleanser", ar:"تنظيف", en:"Cleanser"},
+  {cat:"cleanser", ar:"غسول", en:"Cleansers"},
   {cat:"mask", ar:"ماسكات", en:"Masks"},
-  {cat:"sunscreen", ar:"حماية من الشمس", en:"Sunscreen"}
+  {cat:"sunscreen", ar:"حماية من الشمس", en:"Sunscreens"}
 ];
 
 /* Products */
@@ -197,15 +198,6 @@ function render() {
   });
 }
 
-/* Language */
-function setLang(lang){
-  currentLang = lang;
-  localStorage.setItem("lang", lang);
-  document.body.style.direction = lang==="ar"?"rtl":"ltr";
-  render();
-  renderFilters();
-}
-
 /* Render Filters */
 function renderFilters(){
   const container = document.getElementById("filters");
@@ -216,6 +208,19 @@ function renderFilters(){
     btn.onclick = ()=>{ currentCategory=cat.cat; render(); };
     container.appendChild(btn);
   });
+}
+
+/* Language */
+function setLang(lang){
+  currentLang = lang;
+  localStorage.setItem("lang", lang);
+
+  // تحديث نصوص ديناميكية فقط
+  document.getElementById("page-title").textContent = lang==="ar" ? "المنتجات" : "Products";
+  document.getElementById("back-button").textContent = lang==="ar" ? "الرجوع إلى الخدمات" : "Back to Services";
+
+  render();
+  renderFilters();
 }
 
 /* Init */
