@@ -9,6 +9,7 @@ body {
   margin:0;
   font-family: Arial, sans-serif;
   background: #fafafa;
+  direction: ltr; /* ثابت */
 }
 
 /* Header */
@@ -116,13 +117,13 @@ footer a:hover {
 <body>
 
 <header>
-  <h1>Aesthetic Center DAUH | الخدمات</h1>
+  <h1>Aesthetic Center DAUH | <span id="page-title">الخدمات</span></h1>
   <div class="lang-switch">
     <button onclick="setLang('ar')">AR</button>
     <button onclick="setLang('en')">EN</button>
   </div>
-  <button class="back-button" onclick="location.href='products.html'">
-    الرجوع إلى المنتجات | Back to Products
+  <button class="back-button" onclick="location.href='products.html'" id="back-button">
+    الرجوع إلى المنتجات
   </button>
 </header>
 
@@ -171,7 +172,11 @@ function render() {
 function setLang(lang){
   currentLang = lang;
   localStorage.setItem("lang", lang);
-  document.body.style.direction = lang==="ar"?"rtl":"ltr";
+
+  // تحديث النصوص الديناميكية
+  document.getElementById("page-title").textContent = lang==="ar" ? "الخدمات" : "Services";
+  document.getElementById("back-button").textContent = lang==="ar" ? "الرجوع إلى المنتجات" : "Back to Products";
+
   render();
 }
 
@@ -187,4 +192,3 @@ setLang(currentLang);
 
 </body>
 </html>
-
